@@ -1,5 +1,12 @@
 {
   "$schema": "./icon.schema.json",
   "version": "0.1.0",
-  "icons": []
+  "icons": [
+    {
+      "name": "home",
+      "category": "navigation",
+      "variants": ["outline", "filled"],
+      "tags": ["house", "dashboard", "start", "main"]
+    }
+  ]
 }
