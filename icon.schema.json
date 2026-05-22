@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Icon catalog",
+  "type": "object",
+  "required": ["version", "icons"],
+  "properties": {
+    "version": { "type": "string" },
+    "icons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "category", "variants", "tags"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "description": "kebab-case icon name"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "network",
+              "navigation",
+              "projects",
+              "user",
+              "reports",
+              "payment",
+              "communication",
+              "actions",
+              "status",
+              "ui"
+            ]
+          },
+          "variants": {
+            "type": "array",
+            "items": { "enum": ["outline", "filled"] },
+            "minItems": 1
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "aliases": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

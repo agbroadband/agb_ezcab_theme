@@ -1,0 +1,13 @@
+{
+  "color": {
+    "background": {
+      "primary":   { "value": "{core.color.white}" },
+      "secondary": { "value": "{core.color.gray.50}" },
+      "inverse":   { "value": "{core.color.gray.900}" },
+      "brand":     { "value": "{core.color.blue.600}" },
+      "success":   { "value": "{core.color.green.500}" },
+      "danger":    { "value": "{core.color.red.500}" },
+      "warning":   { "value": "{core.color.yellow.400}" }
+    }
+  }
+}

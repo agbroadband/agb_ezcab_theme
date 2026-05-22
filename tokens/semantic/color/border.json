@@ -1,0 +1,10 @@
+{
+  "color": {
+    "border": {
+      "default": { "value": "{core.color.gray.200}" },
+      "strong":  { "value": "{core.color.gray.400}" },
+      "brand":   { "value": "{core.color.blue.600}" },
+      "danger":  { "value": "{core.color.red.500}" }
+    }
+  }
+}

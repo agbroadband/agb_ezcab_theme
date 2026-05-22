@@ -1,0 +1,18 @@
+{
+  "theme": "light",
+  "color": {
+    "background": {
+      "primary":   { "value": "{core.color.white}" },
+      "secondary": { "value": "{core.color.gray.50}" },
+      "inverse":   { "value": "{core.color.gray.900}" }
+    },
+    "text": {
+      "primary":   { "value": "{core.color.gray.900}" },
+      "secondary": { "value": "{core.color.gray.500}" },
+      "inverse":   { "value": "{core.color.white}" }
+    },
+    "border": {
+      "default": { "value": "{core.color.gray.200}" }
+    }
+  }
+}
