@@ -51,7 +51,7 @@ agb_ezcab_theme/
 └── package.json
 ```
 
-> **`dist/` es auto-generado.** Nunca commitear archivos dentro de esta carpeta — se reconstruyen automáticamente en el pipeline de CI en cada merge.
+> **`dist/` se commitea al repo** para que los SVGs optimizados sean accesibles directamente via CDN (jsDelivr). Siempre correr `npm run build` antes de commitear para regenerarlo.
 
 ---
 
@@ -150,7 +150,10 @@ npm run optimize
 Esto corre SVGO y elimina todos los artefactos del editor de diseño del SVG. Siempre correrlo después de exportar — nunca commitear la exportación cruda de Figma/AI. Ver [Referencia de scripts](#referencia-de-scripts) para más detalle.
 
 **4. Verificar que el resultado se ve bien**
-Abrir el archivo optimizado desde `dist/svg/outline/{categoría}/{nombre}.svg` en un navegador y confirmar que se renderiza correctamente.
+Abrir el archivo optimizado desde `dist/svg/outline/{categoría}/{nombre}.svg` en un navegador y confirmar que se renderiza correctamente, o usar la URL CDN directamente:
+```
+https://cdn.jsdelivr.net/gh/agbroadband/agb_ezcab_theme@main/dist/svg/outline/{categoría}/{nombre}.svg
+```
 
 **5. Registrar el icono en `icons.json`**
 Agregar una entrada al array `icons`:
@@ -207,7 +210,7 @@ Antes (exportación cruda de Figma): 847 bytes
 Después (optimizado con SVGO)     : 112 bytes   → 87% más liviano
 ```
 
-**Cuándo correrlo:** Siempre después de exportar desde cualquier herramienta de diseño. El fuente en `icons/` es la copia de trabajo; `dist/` es lo que se sirve por CDN.
+**Cuándo correrlo:** Siempre después de exportar desde cualquier herramienta de diseño. El fuente en `icons/` es la copia de trabajo; `dist/` es lo que se sirve por CDN y **debe commitearse junto con los fuentes**.
 
 ---
 
@@ -295,17 +298,23 @@ Editar el archivo correspondiente en `tokens/semantic/color/`:
 
 ## Uso por CDN
 
-Una vez publicados, los iconos son accesibles por URL:
+Los iconos se sirven via **jsDelivr** directamente desde este repositorio. No requiere instalación ni descarga.
 
+**Patrón de URL:**
 ```
-https://cdn.agbroadband.com/icons/outline/{categoría}/{nombre}.svg
-https://cdn.agbroadband.com/icons/filled/{categoría}/{nombre}.svg
+https://cdn.jsdelivr.net/gh/agbroadband/agb_ezcab_theme@main/dist/svg/{filled|outline}/{categoría}/{nombre}.svg
+```
+
+**Ejemplos:**
+```
+https://cdn.jsdelivr.net/gh/agbroadband/agb_ezcab_theme@main/dist/svg/outline/navigation/home.svg
+https://cdn.jsdelivr.net/gh/agbroadband/agb_ezcab_theme@main/dist/svg/filled/navigation/home.svg
 ```
 
 ### En HTML — como etiqueta de imagen
 ```html
 <img
-  src="https://cdn.agbroadband.com/icons/outline/ui/home.svg"
+  src="https://cdn.jsdelivr.net/gh/agbroadband/agb_ezcab_theme@main/dist/svg/outline/navigation/home.svg"
   width="24"
   height="24"
   alt="Inicio"
@@ -319,7 +328,7 @@ https://cdn.agbroadband.com/icons/filled/{categoría}/{nombre}.svg
   width: 24px;
   height: 24px;
   background-color: currentColor;
-  mask-image: url('https://cdn.agbroadband.com/icons/outline/ui/home.svg');
+  mask-image: url('https://cdn.jsdelivr.net/gh/agbroadband/agb_ezcab_theme@main/dist/svg/outline/navigation/home.svg');
   mask-repeat: no-repeat;
   mask-size: contain;
 }
@@ -329,10 +338,16 @@ Con `mask-image` el color del icono se controla con `color: navy` en el padre �
 ### Como background CSS (decorativo, sin control de color)
 ```css
 .icon-home {
-  background-image: url('https://cdn.agbroadband.com/icons/outline/ui/home.svg');
+  background-image: url('https://cdn.jsdelivr.net/gh/agbroadband/agb_ezcab_theme@main/dist/svg/outline/navigation/home.svg');
   background-size: 24px 24px;
   background-repeat: no-repeat;
 }
+```
+
+### Versión fija (recomendado para producción)
+Para evitar cambios inesperados, apuntar a un tag específico en lugar de `@main`:
+```
+https://cdn.jsdelivr.net/gh/agbroadband/agb_ezcab_theme@v0.1.0/dist/svg/outline/navigation/home.svg
 ```
 
 ---
@@ -371,7 +386,7 @@ Este archivo es la **fuente de verdad** de qué iconos existen en la librería. 
 
 - [ ] El SVG sigue la guía de estilo (`viewBox="0 0 24 24"`, `currentColor`, sin estilos inline)
 - [ ] El archivo está en la carpeta de categoría correcta
-- [ ] Se corrió `npm run optimize` — se commitea la salida de `dist/`, no la exportación cruda
+- [ ] Se corrió `npm run build` — se commitea tanto `icons/` (fuente) como `dist/` (optimizado para CDN)
 - [ ] Se agregó la entrada en `icons.json` con tags
 - [ ] `npm run validate` pasa sin errores
 - [ ] El mensaje de commit sigue el formato: `chore(icons): add {nombre} to {categoría}`
