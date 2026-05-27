@@ -1,38 +1,14 @@
 export default {
   plugins: [
-    'removeDoctype',
-    'removeXMLProcInst',
-    'removeComments',
-    'removeMetadata',
-    'removeEditorsNSData',
-    'cleanupAttrs',
-    'mergeStyles',
-    'inlineStyles',
-    'minifyStyles',
-    'cleanupIds',
-    'removeUselessDefs',
-    'cleanupNumericValues',
-    'convertColors',
-    'removeUnknownsAndDefaults',
-    'removeNonInheritableGroupAttrs',
-    'removeUselessStrokeAndFill',
-    'removeViewBox',
-    'cleanupEnableBackground',
-    'removeHiddenElems',
-    'removeEmptyText',
-    'convertShapeToPath',
-    'moveElemsAttrsToGroup',
-    'moveGroupAttrsToElems',
-    'collapseGroups',
-    'convertPathData',
-    'convertEllipseToCircle',
-    'convertTransform',
-    'removeEmptyAttrs',
-    'removeEmptyContainers',
-    'mergePaths',
-    'removeUnusedNS',
-    'sortDefsChildren',
-    'removeTitle',
-    'removeDesc',
+    {
+      name: 'preset-default',
+      params: {
+        overrides: {
+          removeViewBox: false,  // keep viewBox="0 0 24 24"
+          cleanupIds: false,     // keep agb-grad-* gradient IDs
+          inlineStyles: false,   // keep <style> blocks + CSS custom properties
+        },
+      },
+    },
   ],
 };

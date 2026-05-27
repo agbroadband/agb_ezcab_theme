@@ -1,12 +1,9 @@
 {
   "name": "@agb/ezcab-theme",
   "version": "0.1.0",
-  "description": "SVG icon library and design tokens for the EzCab platform",
   "private": true,
   "scripts": {
-    "optimize": "svgo --config svgo.config.mjs -rf icons/outline -o dist/svg/outline && svgo --config svgo.config.mjs -rf icons/filled -o dist/svg/filled",
-    "validate": "node scripts/validate.mjs",
-    "build": "npm run optimize && npm run validate"
+    "optimize": "svgo --config svgo.config.mjs -rf icons/"
   },
   "devDependencies": {
     "svgo": "^3.3.2"

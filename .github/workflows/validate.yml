@@ -1,0 +1,39 @@
+name: Validate SVGs
+
+on:
+  push:
+    paths: ['icons/**']
+  pull_request:
+    paths: ['icons/**']
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check SVG files are valid XML
+        run: |
+          failed=0
+          while IFS= read -r -d '' file; do
+            if xmllint --noout "$file" 2>/dev/null; then
+              echo "OK: $file"
+            else
+              echo "FAIL: $file"
+              failed=1
+            fi
+          done < <(find icons -name "*.svg" -print0)
+          exit $failed
+
+      - name: Check viewBox
+        run: |
+          failed=0
+          while IFS= read -r -d '' file; do
+            if grep -q 'viewBox="0 0 24 24"' "$file"; then
+              echo "OK: $file"
+            else
+              echo "FAIL (missing viewBox=\"0 0 24 24\"): $file"
+              failed=1
+            fi
+          done < <(find icons -name "*.svg" -print0)
+          exit $failed
