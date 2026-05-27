@@ -1,9 +1,31 @@
 {
   "name": "@agb/ezcab-theme",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "icons",
+    "README.md"
+  ],
   "scripts": {
-    "optimize": "svgo --config svgo.config.mjs -rf icons/"
+    "optimize": "svgo --config svgo.config.mjs -rf icons/",
+    "build": "bun run scripts/build.mjs",
+    "postbuild": "bun link",
+    "prepack": "bun run build"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
   },
   "devDependencies": {
     "svgo": "^3.3.2"
