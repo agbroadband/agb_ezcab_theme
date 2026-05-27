@@ -1,23 +1,19 @@
 # Build & uso en Vuetify
 
-Compila los SVGs de `icons/` a un módulo ESM tree-shakeable de componentes Vue, estilo `@mdi/js`, para consumirse desde un proyecto Vuetify 4 (Vue 3.5+).
+Compila los SVGs de `icons/` a `dist/index.mjs` — un export por ícono (estilo `@mdi/js`), consumible desde Vuetify 4 (Vue 3.5+).
+
+Las convenciones de estilo, theming via CSS custom properties y guía visual de los íconos están en [README.md](README.md).
 
 ---
 
-## Build + link local
+## Comandos
 
 ```bash
-bun run build
+bun run optimize   # SVGO sobre icons/ (in-place)
+bun run build      # genera dist/ + corre `bun link` automáticamente
 ```
 
-Hace dos cosas en cadena:
-
-1. **`build`** — corre `scripts/build.mjs` y genera:
-   - `dist/index.mjs` — un export por ícono.
-   - `dist/index.d.ts` — tipos.
-2. **`postbuild`** — corre `bun link` automáticamente, registrando `@agb/ezcab-theme` como paquete global de Bun. Desde ese momento, cualquier proyecto en la máquina puede consumirlo (ver sección siguiente).
-
-El script (`scripts/build.mjs`) no tiene deps de build; corre solo con built-ins de Node/Bun. Inline-a las reglas CSS por clase como atributos en los `<path>` para que cada SVG sea autosuficiente (no hay leak global de `<style>` cuando se renderizan varios íconos en la misma página).
+`build` ejecuta `scripts/build.mjs` y produce `dist/index.mjs` + `dist/index.d.ts`. El `postbuild` registra `@agb/ezcab-theme` como paquete global de Bun para que cualquier proyecto local pueda linkearlo.
 
 ---
 
@@ -28,22 +24,20 @@ El script (`scripts/build.mjs`) no tiene deps de build; corre solo con built-ins
 | Archivo | Export |
 | --- | --- |
 | `outline/navigation/home.svg` | `agbHomeOutline` |
-| `filled/navigation/home.svg` | `agbHomeFilled` |
+| `filled/navigation/home.svg`  | `agbHomeFilled`  |
 
-El script aborta si detecta colisiones de nombre.
+El build aborta si detecta colisión de nombres.
 
 ---
 
-## Consumo desde Vuetify 4
-
-Tras `bun run build` el paquete queda registrado globalmente con `bun link`. Desde tu proyecto Vuetify usa `bun add` con el protocolo `link:` — esto crea el symlink **y** persiste la entrada en `package.json` de forma fiable (a diferencia de `bun link @agb/ezcab-theme` que en versiones recientes de Bun no siempre escribe el `package.json` con paquetes scoped):
+## Linkear en un proyecto Vuetify
 
 ```bash
 cd /ruta/al/proyecto-vuetify
 bun add link:@agb/ezcab-theme
 ```
 
-Resultado en el `package.json` del proyecto Vuetify:
+Resultado en `package.json` del proyecto consumidor:
 
 ```jsonc
 {
@@ -53,7 +47,9 @@ Resultado en el `package.json` del proyecto Vuetify:
 }
 ```
 
-Así queda persistido — cualquiera que clone el proyecto y corra `bun install` reusa el link (si está registrado en su máquina) o falla explícitamente si falta. Luego:
+---
+
+## Uso
 
 ```vue
 <script setup>
@@ -66,42 +62,23 @@ import { agbHomeOutline, agbHomeFilled } from '@agb/ezcab-theme'
 </template>
 ```
 
-Cada export es un componente Vue funcional. Importar solo lo que cada página necesite: Vite/Rollup hacen tree-shake del resto gracias a `"sideEffects": false` en el `package.json`. El resultado: cada página termina con su propio chunk mínimo de íconos.
-
-> Al agregar íconos nuevos basta con volver a correr `bun run build` aquí — el symlink ya apunta a `dist/`, así que el proyecto Vuetify ve los nuevos exports tras un reinicio del dev server.
-
----
-
-## Theming en runtime
-
-Los íconos preservan las CSS custom properties del diseño — anulables globalmente:
-
-```css
-:root {
-  --agb-stroke: #0D2340;       /* outline: color del trazo */
-  --agb-primary: #0d2c57;      /* filled: cuerpo navy */
-  --agb-accent-start: #0393f1; /* filled: inicio del gradiente */
-  --agb-accent-end: #0479d0;   /* filled: fin del gradiente */
-}
-```
-
-Para que el color de `<v-icon>` de Vuetify tinte los íconos outline, basta con:
-
-```css
-:root { --agb-stroke: currentColor; }
-```
+Cada export es un componente Vue funcional. Tree-shaking automático: solo entra al bundle lo que importes.
 
 ---
 
 ## Flujo al agregar íconos
 
-1. Guardar el SVG en `icons/{outline|filled}/{categoría}/{nombre}.svg`.
-2. `bun run optimize` — pasa SVGO sobre `icons/`.
-3. `bun run build` — regenera `dist/`.
-4. Commitear cambios en `icons/` (el `dist/` está en `.gitignore`).
+```bash
+# 1. Guardar SVG en icons/{outline|filled}/{categoría}/{nombre}.svg
+bun run optimize   # 2. optimizar
+bun run build      # 3. regenerar dist/
+# 4. commitear cambios en icons/ y dist/
+```
 
 ---
 
 ## Publicación
 
-`prepack` corre el build automáticamente, por lo que `bun publish` (o `npm publish`) deja `dist/` listo en el tarball. El `package.json` ya tiene configurados `exports`, `main`, `module`, `types` y `files: [dist, icons, README.md]`.
+```bash
+bun publish        # `prepack` corre el build automáticamente
+```
