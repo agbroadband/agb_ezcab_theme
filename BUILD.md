@@ -9,7 +9,6 @@ Las convenciones de estilo, theming via CSS custom properties y guía visual de 
 ## Comandos
 
 ```bash
-bun run optimize   # SVGO sobre icons/ (in-place)
 bun run build      # genera dist/ + corre `bun link` automáticamente
 ```
 
@@ -24,7 +23,7 @@ bun run build      # genera dist/ + corre `bun link` automáticamente
 | Archivo | Export |
 | --- | --- |
 | `outline/navigation/home.svg` | `agbHomeOutline` |
-| `filled/navigation/home.svg`  | `agbHomeFilled`  |
+| `filled/navigation/home.svg` | `agbHomeFilled` |
 
 El build aborta si detecta colisión de nombres.
 
@@ -70,9 +69,8 @@ Cada export es un componente Vue funcional. Tree-shaking automático: solo entra
 
 ```bash
 # 1. Guardar SVG en icons/{outline|filled}/{categoría}/{nombre}.svg
-bun run optimize   # 2. optimizar
-bun run build      # 3. regenerar dist/
-# 4. commitear cambios en icons/ y dist/
+bun run build      # 2. regenerar dist/
+# 3. commitear cambios en icons/ y dist/
 ```
 
 ---
